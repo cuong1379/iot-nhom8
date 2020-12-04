@@ -1,0 +1,41 @@
+
+
+
+
+/*END BODY*/
+
+/*GRADIENTS*/
+  
+  /*BLUE*/
+  .b-blue, .b-blue:before {
+    background: rgba(5,118,255,1);
+    background: -moz-linear-gradient(45deg, rgba(5,118,255,1) 0%, rgba(36,248,255,1) 100%);
+    background: -webkit-gradient(left bottom, right top, color-stop(0%, rgba(5,118,255,1)), color-stop(100%, rgba(36,248,255,1)));
+    background: -webkit-linear-gradient(45deg, rgba(5,118,255,1) 0%, rgba(36,248,255,1) 100%);
+    background: -o-linear-gradient(45deg, rgba(5,118,255,1) 0%, rgba(36,248,255,1) 100%);
+    background: -ms-linear-gradient(45deg, rgba(5,118,255,1) 0%, rgba(36,248,255,1) 100%);
+    background: linear-gradient(45deg, rgba(5,118,255,1) 0%, rgba(36,248,255,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#0576ff', endColorstr='#24f8ff', GradientType=1 );
+  }
+/*END GRADIENTS*/
+/*BASE BUTTON*/
+
+.button2 {
+  display: inline-block;
+  font-size: 15px;
+  margin: 10px;
+  padding: 10px;
+  border-radius: 5px;
+  transition: all .5s;
+  filter: hue-rotate(0deg);
+  color: #FFF;
+  text-decoration: none;
+}
+/*END BASE BUTTON*/
+/*ROTATE*/
+
+.rot-135:hover {
+  filter: hue-rotate(135deg);
+}
+
+/*END ROTATE*/
