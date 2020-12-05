@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { Form, Input, Button, message  } from 'antd';
 import axios from 'axios';
 import { useHistory
@@ -10,10 +10,13 @@ import Password from 'antd/lib/input/Password';
 
 function Register(props) {
 
+  const [loadingRegister, setLoadingRegister ] = useState(false)
+
   // let auth = useAuth();
   let history = useHistory();
 
   const onFinish = async values => {
+    setLoadingRegister(true)
   
     try {
       const response = await axios.get(
@@ -21,6 +24,7 @@ function Register(props) {
       )
       console.log(response.data)
       if(response.data.userExist === true) {
+        setLoadingRegister(false)
         message.error('Xin lỗi, Tên đăng nhập đã được dùng!')
         console.log('deodc')
       } else{
@@ -28,6 +32,7 @@ function Register(props) {
           'https://iotzlearning.herokuapp.com/api/register', 
               values,
         ) 
+        setLoadingRegister(false)
         message.success('Đăng ký thành công')
         history.push('/login') 
         // localStorage.setItem ('_id', res.data._id);  
@@ -106,7 +111,7 @@ function Register(props) {
       
 
       <Form.Item>
-        <Button type="primary" htmlType="submit">
+        <Button type="primary" htmlType="submit" loading={loadingRegister}>
           Submit
         </Button>
       </Form.Item>
