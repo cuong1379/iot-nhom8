@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import { Form, Input, Button, message } from 'antd';
 import {useAuth} from '../App'
 import axios from 'axios';
@@ -7,6 +7,8 @@ import {useHistory
 import './login.css'
 
 export function Login(props) {
+
+  const [loadingLogin, setLoadingLogin ] = useState(false)
 
 
   let auth = useAuth();
@@ -18,13 +20,16 @@ export function Login(props) {
   })
 
     const onFinish = async values => {
+      setLoadingLogin(true)
         try {
           const res = await axios.post(
               'https://iotzlearning.herokuapp.com/api/login', 
                   values
           )
           if(res.data._id){
+            setLoadingLogin(false)
             message.success('Đăng nhập thành công')
+
 
             // localStorage.setItem('user', res.data)
            
@@ -108,7 +113,7 @@ export function Login(props) {
       
 
       <Form.Item>
-        <Button type="primary" htmlType="submit">
+        <Button type="primary" htmlType="submit" loading={loadingLogin}>
           Submit
         </Button>
       </Form.Item>

@@ -26,6 +26,8 @@ function Main(props) {
     
     
     const [on, setOn] = useState(false)
+    const [loadingOn, setLoadingOn ] = useState(false)
+    const [loadingOff, setLoadingOff ] = useState(false)
     
         
           
@@ -33,6 +35,7 @@ function Main(props) {
 
     
         const handleLightOn = async () => {
+            setLoadingOn(true)
             try {
                 const res = await axios.get(
                     `https://iotzlearning.herokuapp.com/api/light?key=${localStorage.getItem('_id')}&turn=on`
@@ -40,6 +43,7 @@ function Main(props) {
                 
                 if(res.data.sendSwitchLight = "OK"){
                     setOn(true)
+                    setLoadingOn(false)
                 }
                 console.log('den sang')
                 console.log(res.data)
@@ -53,12 +57,14 @@ function Main(props) {
    
 
         const handleLightOff = async () => {
+            
             try {
                 const res = await axios.get(
                     `https://iotzlearning.herokuapp.com/api/light?key=${localStorage.getItem('_id')}&turn=off`
                 )
                 if(res.data.sendSwitchLight = "OK"){
                     setOn(false)
+                    
                 }
                 console.log('den tat')
                 console.log(res.data)
@@ -84,6 +90,34 @@ function Main(props) {
         // }
 
 
+
+        // const { loadings } = this.state;
+        // const enterLoading = index => {
+        //     this.setState(({ loadings }) => {
+        //       const newLoadings = [...loadings];
+        //       newLoadings[index] = true;
+        
+        //       return {
+        //         loadings: newLoadings,
+        //       };
+        //     });
+        //     setTimeout(() => {
+        //       this.setState(({ loadings }) => {
+        //         const newLoadings = [...loadings];
+        //         newLoadings[index] = false;
+        
+        //         return {
+        //           loadings: newLoadings,
+        //         };
+        //       });
+        //     }, 6000);
+        //   };
+
+    //    const loadingState = () => {
+    //        {loading}
+    //    }
+
+
     //Style
     const btnStyle = {
         display: 'flex',
@@ -94,12 +128,13 @@ function Main(props) {
    
     
     return (
+        
         <div>
            
             <div>
                 <div style={btnStyle}>
                     <Space  size={30}>
-                        <Button type="primary" onClick={handleLightOn} >Light On</Button>
+                        <Button type="primary" onClick={handleLightOn} loading={loadingOn}>Light On</Button>
                         <Button type="primary" danger onClick={handleLightOff} >Light Off</Button>
                     </Space>
                 </div>
