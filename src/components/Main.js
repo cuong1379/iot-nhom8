@@ -1,39 +1,20 @@
-import React, {useState}  from 'react';
+import React, {useState, useEffect}  from 'react';
 import axios from 'axios';
 import { Button, Space } from 'antd';
 import './main.css'
+import { Bar } from 'react-chartjs-2';
 
 
 function Main(props) {
 
-    // const [infoLogin, setInfoLogin] = useState('')
-    
-    // const [userId, setUserId] = useState('')
-
-    
-    // const getInfoUser = async () => {
-    //       try {
-    //           const res = await axios.get(
-    //               `https://iotzlearning.herokuapp.com/`
-    //           )
-    //           console.log(res.data)
-
-    //           setInfoLogin(res.data)
-    //       } catch (error) {
-    //           console.log(error.message)
-    //       }
-    // }
-    
-    
     const [on, setOn] = useState(false)
     const [loadingOn, setLoadingOn ] = useState(false)
-    const [loadingOff, setLoadingOff ] = useState(false)
-    
-        
-          
-    
 
-    
+    const [humidity, setHumidity] = useState()
+    const [temperature, setTemperature] = useState()
+    const [gas, setGas] = useState()
+
+
         const handleLightOn = async () => {
             setLoadingOn(true)
             try {
@@ -44,6 +25,15 @@ function Main(props) {
                 if(res.data.sendSwitchLight = "OK"){
                     setOn(true)
                     setLoadingOn(false)
+                    try {
+                        const response = await axios.get(
+                            `https://iotzlearning.herokuapp.com/api/update-light?key=${localStorage.getItem('_id')}&turn=on`
+                        )               
+                    } catch (error) {
+                        
+                        console.log(error.message)
+                    }
+                 
                 }
                 console.log('den sang')
                 console.log(res.data)
@@ -64,6 +54,14 @@ function Main(props) {
                 )
                 if(res.data.sendSwitchLight = "OK"){
                     setOn(false)
+                    try {
+                        const response = await axios.get(
+                            `https://iotzlearning.herokuapp.com/api/update-light?key=${localStorage.getItem('_id')}&turn=off`
+                        )               
+                    } catch (error) {
+                        
+                        console.log(error.message)
+                    }
                     
                 }
                 console.log('den tat')
@@ -75,54 +73,36 @@ function Main(props) {
             }
         }
 
-        //Phan nay doi sever Pi lam moi uncmt duoc
 
-        // const handleCurrentLightStatus = async () => {
-        //     try {
-        //         const res = await axios.get(
-        //             `https://iotzlearning.herokuapp.com/api/light?key=${localStorage.getItem('_id')}`
-        //         )
-        //         console.log(res.data)
-                
-        //     } catch (error) {
-        //         console.log(error.message)
-        //     }
-        // }
+            useEffect( async () => {
+                try {
+                    const res = await axios.get(
+                        `https://iotzlearning.herokuapp.com/api/data?key=${localStorage.getItem('_id')}`
+                    )
+                    const datas = res.data
+                    setHumidity(datas[0].humidity)
+                    setTemperature(datas[0].temperature)
+                    setGas(datas[0].gas)
+                    
+                   
+                    
+                } catch (error) {
+                    
+                    console.log(error.message)
+                }
+              }, []);
 
 
-
-        // const { loadings } = this.state;
-        // const enterLoading = index => {
-        //     this.setState(({ loadings }) => {
-        //       const newLoadings = [...loadings];
-        //       newLoadings[index] = true;
-        
-        //       return {
-        //         loadings: newLoadings,
-        //       };
-        //     });
-        //     setTimeout(() => {
-        //       this.setState(({ loadings }) => {
-        //         const newLoadings = [...loadings];
-        //         newLoadings[index] = false;
-        
-        //         return {
-        //           loadings: newLoadings,
-        //         };
-        //       });
-        //     }, 6000);
-        //   };
-
-    //    const loadingState = () => {
-    //        {loading}
-    //    }
-
+         
 
     //Style
     const btnStyle = {
         display: 'flex',
         justifyContent: 'center',
         marginTop: 30,
+    }
+    const resfeshStyle = {
+        marginBottom: 100,
     }
 
    
@@ -138,14 +118,49 @@ function Main(props) {
                         <Button type="primary" danger onClick={handleLightOff} >Light Off</Button>
                     </Space>
                 </div>
-                {/* <Button type="primary" onClick={handleCurrentLightStatus} >Check Light Status</Button> */}
+            
             </div>
 
             <span className={on ? 'light on' : 'light'}>
                  <i className="fas fa-lightbulb"></i>
             </span>
+
             
             
+            <Bar
+                data={{
+                labels: [
+                    "Độ ẩm",
+                    "Nhiệt độ",
+                    "Gas",
+
+                ],
+                borderColor: "white",
+                color: "white",
+                datasets: [
+                    {
+                    label: "độ",
+                    backgroundColor: [
+                        "#3e95cd",
+                        "#8e5ea2",
+                        "#3cba9f",
+
+                    ],
+                    
+                    data: [humidity, temperature, gas]
+                    
+                    }
+                ]
+                }}
+                options={{
+                legend: { display: false },
+                title: {
+                    display: true,
+                    text: "Biểu đồ quan sát độ ẩm, nhiệt độ, gas"
+                }
+                }}
+            />
+
         </div>
     );
 }
